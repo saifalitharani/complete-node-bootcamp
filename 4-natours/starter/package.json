@@ -1,0 +1,14 @@
+{
+  "name": "natours",
+  "version": "1.0.0",
+  "description": "demo project to learn noe, express and mongodb",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon server.js"
+  },
+  "author": "saifalitharani",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
