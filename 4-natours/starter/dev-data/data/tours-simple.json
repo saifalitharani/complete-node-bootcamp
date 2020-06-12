@@ -124,4 +124,56 @@
     "imageCover": "tour-9-cover.jpg",
     "images": ["tour-9-1.jpg", "tour-9-2.jpg", "tour-9-3.jpg"],
     "startDates": ["2021-12-16,10:00", "2022-01-16,10:00", "2022-12-12,10:00"]
+}, {
+    "id": 9,
+    "name": "Test Tour Swat Valley",
+    "duration": 10,
+    "difficulty": "easy"
+}, {
+    "id": 10,
+    "name": "Test Tour Hunza Valley",
+    "duration": 15,
+    "difficulty": "hard"
+}, {
+    "id": 11,
+    "name": "Test Tour Kalam Valley",
+    "duration": 8,
+    "difficulty": "moderate"
+}, {
+    "id": 12,
+    "name": "Test Tour Skardu",
+    "duration": 14,
+    "difficulty": "hard"
+}, {
+    "id": 13,
+    "name": "Test Tour Khunjerab",
+    "duration": 14,
+    "difficulty": "hard"
+}, {
+    "id": 14,
+    "name": "Test Tour Kumrat Valley",
+    "duration": 8,
+    "difficulty": "easy"
+}, {
+    "id": 15,
+    "name": "Test Tour Jahaz Banda",
+    "duration": 17,
+    "difficulty": "hard"
+}, {
+    "id": 16,
+    "name": "Test Tour Ratti Galli",
+    "price": 9000,
+    "duration": 17,
+    "difficulty": "hard"
+}, {
+    "id": 17,
+    "name": "Test Tour Ratti Galli",
+    "duration": 17,
+    "difficulty": "hard"
+}, {
+    "id": 18,
+    "name": "Test Tour Ratti Galli",
+    "price": 9000,
+    "duration": 17,
+    "difficulty": "hard"
 }]
