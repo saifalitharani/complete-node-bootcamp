@@ -156,7 +156,6 @@ exports.getTourStats = catchAsync(async (req, res, next) => {
             stats,
         },
     });
-
 });
 
 exports.getMonthlyPlan = catchAsync(async (req, res, next) => {
@@ -212,5 +211,4 @@ exports.getMonthlyPlan = catchAsync(async (req, res, next) => {
             monthlyPlan,
         },
     });
-
 });

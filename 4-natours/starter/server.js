@@ -5,6 +5,12 @@ dotenv.config({
     path: './config.env',
 });
 
+//UNHANDLED REJECTED PROMISES HANDLER
+process.on('uncaughtException', (err) => {
+    console.log(err.name, err.message);
+    process.exit(1);
+});
+
 const app = require('./app');
 
 const DB = process.env.DATABASE.replace(
@@ -29,6 +35,14 @@ try {
 
 //Creating the server:
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
     console.log(`app running on port ${PORT}`);
+});
+
+//UNHANDLED REJECTED PROMISES HANDLER
+process.on('unhandledRejection', (err) => {
+    console.log(err.name, err.message);
+    server.close(() => {
+        process.exit(1);
+    });
 });
