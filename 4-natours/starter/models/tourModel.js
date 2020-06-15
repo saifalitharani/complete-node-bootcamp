@@ -134,7 +134,6 @@ mongooseSchema.post('find', function (docs, next) {
             Date.now() - this.start
         } milliseconds!`
     );
-    console.log(docs);
     next();
 });
 
