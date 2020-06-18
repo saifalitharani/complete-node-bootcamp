@@ -10,7 +10,8 @@ const {
 
 const {
     signUp,
-    login
+    login,
+    forgotPassword,
 } = require('../controllers/authController');
 
 const userRouter = express.Router();
@@ -19,6 +20,7 @@ const userRouter = express.Router();
 //Routes defined for normal users.
 userRouter.post('/signup', signUp);
 userRouter.post('/login', login);
+userRouter.post('/forgotPassword', forgotPassword);
 
 //Routes defined for system administrator!
 userRouter.route('/').get(allUsers).post(createUser);
