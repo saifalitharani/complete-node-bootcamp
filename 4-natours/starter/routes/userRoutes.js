@@ -6,12 +6,17 @@ const {
     getUser,
     updateUser,
     deleteUser,
+    updateMe,
+    deleteMe,
 } = require('../controllers/userController');
 
 const {
+    protect,
     signUp,
     login,
     forgotPassword,
+    resetPassword,
+    updatePassword,
 } = require('../controllers/authController');
 
 const userRouter = express.Router();
@@ -21,6 +26,10 @@ const userRouter = express.Router();
 userRouter.post('/signup', signUp);
 userRouter.post('/login', login);
 userRouter.post('/forgotPassword', forgotPassword);
+userRouter.patch('/resetPassword/:token', resetPassword);
+userRouter.post('/updatePassword', protect, updatePassword);
+userRouter.patch('/updateMe', protect, updateMe);
+userRouter.delete('/deleteMe', protect, deleteMe);
 
 //Routes defined for system administrator!
 userRouter.route('/').get(allUsers).post(createUser);
