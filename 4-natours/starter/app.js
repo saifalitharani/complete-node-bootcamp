@@ -1,6 +1,7 @@
 const express = require('express');
 const morgan = require('morgan');
-const rateLimit = require('express-rate-limit')
+const rateLimit = require('express-rate-limit');
+const helmet = require('helmet');
 
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
@@ -11,10 +12,16 @@ const app = express();
 
 //GLOBAL MIDDLEWARES.
 //Adding a middleware to allow server to use req.body on POST requests
+
+//Set security HTTP headers
+app.use(helmet());
+
+//Using morgan as logger when we are in development mode
 if (process.env.NODE_ENV === 'development') {
     app.use(morgan('dev'));
 }
 
+//Limit request from same api over certain period of time.
 const limiter = rateLimit({
     max: 100,
     windowMs: 60 * 60 * 1000,
@@ -23,10 +30,13 @@ const limiter = rateLimit({
 
 app.use('/api', limiter);
 
-app.use(express.json());
+//Body parser, reading data from body into req.body.
+app.use(express.json({ limit: '10kb' }));
+
+//Serving static files
 app.use(express.static(`${__dirname}/public`));
 
-//Adding custom middleware:
+//Adding custom middleware - add request time to response.
 app.use((req, res, next) => {
     req.requestTime = new Date().toISOString();
     next();
