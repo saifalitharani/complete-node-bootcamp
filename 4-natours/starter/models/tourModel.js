@@ -3,7 +3,7 @@ const slugify = require('slugify');
 const validator = require('validator');
 //const User = require('./userModel');
 
-const mongooseSchema = new mongoose.Schema({
+const tourSchema = new mongoose.Schema({
     name: {
         type: String,
         required: [true, 'A tour must have a name'],
@@ -117,20 +117,26 @@ const mongooseSchema = new mongoose.Schema({
     },
 });
 
-mongooseSchema.virtual('durationWeeks').get(function () {
+tourSchema.virtual('durationWeeks').get(function () {
     return this.duration / 7;
+});
+
+tourSchema.virtual('reviews', {
+    ref: 'Review',
+    foreignField: 'tour',
+    localField: '_id',
 });
 
 //DOCUMENT MIDDLEWARE - used to manipulate the document currently being processed
 //Pre: - runs before .save() and .create()
-mongooseSchema.pre('save', function (next) {
+tourSchema.pre('save', function (next) {
     this.slug = slugify(this.name, {
         lower: true,
     });
     next();
 });
 
-mongooseSchema.pre('save', async function (next) {
+tourSchema.pre('save', async function (next) {
     // const guidesPromises = this.guides.map(
     //     async (id) => await User.findById(id)
     // );
@@ -140,13 +146,13 @@ mongooseSchema.pre('save', async function (next) {
 });
 
 //Post: - runs after .save() and .create()
-mongooseSchema.post('save', function (doc, next) {
+tourSchema.post('save', function (doc, next) {
     next();
 });
 
 //QUERY MIDDLEWARE - used to manipulate the find query.
 //Pre: runs before find()
-mongooseSchema.pre('find', function (next) {
+tourSchema.pre('find', function (next) {
     this.find({
         secretTour: {
             $ne: true,
@@ -157,7 +163,7 @@ mongooseSchema.pre('find', function (next) {
     next();
 });
 
-mongooseSchema.pre(/^find/, function (next) {
+tourSchema.pre(/^find/, function (next) {
     this.populate({
         path: 'guides',
         select: '-__v -passwordChangedAt',
@@ -166,7 +172,7 @@ mongooseSchema.pre(/^find/, function (next) {
 });
 
 //Post: runs after find()
-mongooseSchema.post('find', function (docs, next) {
+tourSchema.post('find', function (docs, next) {
     console.log(
         `The time it took to excute query: ${
             Date.now() - this.start
@@ -176,18 +182,18 @@ mongooseSchema.post('find', function (docs, next) {
 });
 
 //AGGREGATE MIDDLEWARE - used to manipulate the aggregate query.
-mongooseSchema.pre('aggregate', function (next) {
+tourSchema.pre('aggregate', function (next) {
     this.pipeline().unshift({
         $match: {
             secretTour: {
-                $ne: true
+                $ne: true,
             }
         }
     });
     next();
 });
 
-const Tour = mongoose.model('Tour', mongooseSchema);
+const Tour = mongoose.model('Tour', tourSchema);
 
 //Creating the Document using save method.
 /*const testTour = new Tour({
