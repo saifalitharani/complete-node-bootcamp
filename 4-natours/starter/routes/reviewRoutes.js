@@ -18,6 +18,7 @@ reviewRouter
 
 reviewRouter
     .route('/:id')
+    .get(reviewController.getReviewById)
     .patch(reviewController.updateReview)
     .delete(reviewController.deleteReview);
 

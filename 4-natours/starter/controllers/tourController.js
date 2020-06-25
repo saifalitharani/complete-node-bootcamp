@@ -1,8 +1,8 @@
 //const fs = require('fs');
 const Tour = require('../models/tourModel');
-const ApiFeatures = require('../utils/apiFeatures');
+// const ApiFeatures = require('../utils/apiFeatures');
 const catchAsync = require('../utils/catchAsync');
-const AppError = require('../utils/appError');
+// const AppError = require('../utils/appError');
 const factory = require('./handlerFactory');
 
 //Route Handlers.
@@ -13,6 +13,9 @@ exports.aliasTour = async (req, res, next) => {
     next();
 };
 
+//Implemented using handlerFactory
+exports.allTours = factory.getAll(Tour);
+/*
 exports.allTours = catchAsync(async (req, res, next) => {
     const features = new ApiFeatures(Tour.find(), req.query)
         .filter()
@@ -30,7 +33,14 @@ exports.allTours = catchAsync(async (req, res, next) => {
         },
     });
 });
+*/
 
+//Implemented using handlerFactory
+exports.getTourById = factory.getOne(Tour, {
+    path: 'reviews',
+});
+
+/*
 exports.getTourById = catchAsync(async (req, res, next) => {
     const tour = await Tour.findById(req.params.id).populate('reviews');
     if (!tour) {
@@ -45,6 +55,7 @@ exports.getTourById = catchAsync(async (req, res, next) => {
         },
     });
 });
+*/
 
 exports.createTour = factory.createOne(Tour);
 

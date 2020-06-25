@@ -3,6 +3,9 @@ const AppError = require('../utils/appError');
 const Reviews = require('../models/reviewModel');
 const factory = require('./handlerFactory');
 
+
+exports.getAllReviews = factory.getAll(Reviews);
+/*
 exports.getAllReviews = catchAsync(async (req, res, next) => {
     let filter = {};
     //Handling NestedRoute case here.
@@ -26,6 +29,7 @@ exports.getAllReviews = catchAsync(async (req, res, next) => {
         },
     });
 });
+*/
 
 //Middleware
 exports.setTourUserIds = (req, res, next) => {
@@ -54,5 +58,6 @@ exports.createReview = catchAsync(async (req, res, next) => {
 */
 
 exports.createReview = factory.createOne(Reviews);
-exports.deleteReview = factory.deleteOne(Reviews);
+exports.getReviewById = factory.getOne(Reviews, null);
 exports.updateReview = factory.updateOne(Reviews);
+exports.deleteReview = factory.deleteOne(Reviews);

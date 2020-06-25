@@ -53,6 +53,7 @@ exports.deleteMe = catchAsync(async (req, res, next) => {
     });
 });
 
+/*
 exports.allUsers = catchAsync(async (req, res, next) => {
     const users = await User.find();
 
@@ -65,20 +66,18 @@ exports.allUsers = catchAsync(async (req, res, next) => {
         },
     });
 });
+*/
 
 exports.createUser = (req, res) => {
     res.status(500).json({
         status: 'error',
-        message: 'This route is not yet defined!',
+        message: 'This route is not yet defined! Please use signup instead',
     });
 };
 
-exports.getUser = (req, res) => {
-    res.status(500).json({
-        status: 'error',
-        message: 'This route is not yet defined!',
-    });
-};
+exports.allUsers = factory.getAll(User);
+
+exports.getUser = factory.getOne(User);
 
 //Using Handler Factory - Do not use this to update Password
 exports.updateUser = factory.updateOne(User);
