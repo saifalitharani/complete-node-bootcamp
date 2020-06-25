@@ -27,11 +27,16 @@ exports.getAllReviews = catchAsync(async (req, res, next) => {
     });
 });
 
-exports.createReview = catchAsync(async (req, res, next) => {
-    //Allow nested routes.
+//Middleware
+exports.setTourUserIds = (req, res, next) => {
+    //Allow nested routes
     if (!req.body.tour) req.body.tour = req.params.tourId;
     if (!req.body.user) req.body.user = req.user.id;
+    next();
+};
 
+/*
+exports.createReview = catchAsync(async (req, res, next) => {
     const newReview = await Reviews.create({
         review: req.body.review,
         rating: req.body.rating,
@@ -46,5 +51,8 @@ exports.createReview = catchAsync(async (req, res, next) => {
         },
     });
 });
+*/
 
+exports.createReview = factory.createOne(Reviews);
 exports.deleteReview = factory.deleteOne(Reviews);
+exports.updateReview = factory.updateOne(Reviews);

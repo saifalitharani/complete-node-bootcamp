@@ -46,15 +46,18 @@ exports.getTourById = catchAsync(async (req, res, next) => {
     });
 });
 
-exports.createTour = catchAsync(async (req, res, next) => {
-    const newTour = await Tour.create(req.body);
-    res.status(201).json({
-        status: 'success',
-        requestedAt: req.requestTime,
-        data: {
-            tour: newTour,
-        },
-    });
+exports.createTour = factory.createOne(Tour);
+
+/*
+// exports.createTour = catchAsync(async (req, res, next) => {
+//     const newTour = await Tour.create(req.body);
+//     res.status(201).json({
+//         status: 'success',
+//         requestedAt: req.requestTime,
+//         data: {
+//             tour: newTour,
+//         },
+//     });
     /*const newId = tours[tours.length - 1].id + 1;
     const newTour = Object.assign(req.body, {
         id: newId,
@@ -76,8 +79,12 @@ exports.createTour = catchAsync(async (req, res, next) => {
         }
     );
     */
-});
+//});
 
+
+//Using Handler Factory
+exports.updateTour = factory.updateOne(Tour);
+/*
 exports.updateTour = catchAsync(async (req, res, next) => {
     const tour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
         new: true,
@@ -96,6 +103,7 @@ exports.updateTour = catchAsync(async (req, res, next) => {
         },
     });
 });
+*/
 
 //Using Handler Factory
 exports.deleteTour = factory.deleteOne(Tour);
