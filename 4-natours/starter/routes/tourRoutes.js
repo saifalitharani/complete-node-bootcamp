@@ -18,6 +18,8 @@ const {
     restrictTo,
 } = require('../controllers/authController');
 
+const reviewRouter = require('./reviewRoutes');
+
 const router = express.Router();
 //router.param('id', checkId);
 
@@ -31,5 +33,7 @@ router
     .get(getTourById)
     .patch(updateTour)
     .delete(protect, restrictTo('admin', 'lead-guide'), deleteTour);
+
+router.use('/:tourId/reviews', reviewRouter);
 
 module.exports = router;
