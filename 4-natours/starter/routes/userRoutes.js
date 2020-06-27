@@ -1,6 +1,7 @@
 const express = require('express');
 
 const {
+    getMe,
     allUsers,
     createUser,
     getUser,
@@ -30,6 +31,7 @@ userRouter.patch('/resetPassword/:token', resetPassword);
 userRouter.post('/updatePassword', protect, updatePassword);
 userRouter.patch('/updateMe', protect, updateMe);
 userRouter.delete('/deleteMe', protect, deleteMe);
+userRouter.get('/me', protect, getMe, getUser);
 
 //Routes defined for system administrator!
 userRouter.route('/').get(allUsers).post(createUser);
