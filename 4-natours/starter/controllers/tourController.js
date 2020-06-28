@@ -2,7 +2,7 @@
 const Tour = require('../models/tourModel');
 // const ApiFeatures = require('../utils/apiFeatures');
 const catchAsync = require('../utils/catchAsync');
-// const AppError = require('../utils/appError');
+const AppError = require('../utils/appError');
 const factory = require('./handlerFactory');
 
 //Route Handlers.
@@ -232,6 +232,48 @@ exports.getMonthlyPlan = catchAsync(async (req, res, next) => {
         results: monthlyPlan.length,
         data: {
             monthlyPlan,
+        },
+    });
+});
+
+exports.getToursWithin = catchAsync(async (req, res, next) => {
+    const {
+        distance,
+        latlng,
+        unit,
+    } = req.params;
+
+    const [lat, lng] = latlng.split(',');
+
+    //calculating radius in radians.
+    const radius = unit === 'mi' ? distance / 3963.2 : distance / 6378.1;
+
+    if (!lat || !lng) {
+        next(
+            new AppError(
+                'Latitude and Longitude must be defined in format: -lat,long',
+                400
+            )
+        );
+    }
+
+    const tours = await Tour.find({
+        startLocation: {
+            $geoWithin: {
+                $centerSphere: [
+                    [lng, lat], radius
+                ]
+            }
+        }
+    })
+
+    console.log(distance, lat, lng, unit);
+    res.status(200).json({
+        status: 'success',
+        requestedAt: req.requestTime,
+        results: tours.length > 0 ? tours.length : 0,
+        data: {
+            tours,
         },
     });
 });

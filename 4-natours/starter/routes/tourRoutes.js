@@ -11,9 +11,13 @@ const {
     aliasTour,
     getTourStats,
     getMonthlyPlan,
+    getToursWithin,
 } = require('../controllers/tourController');
 
-const { protect, restrictTo } = require('../controllers/authController');
+const {
+    protect,
+    restrictTo
+} = require('../controllers/authController');
 
 const reviewRouter = require('./reviewRoutes');
 
@@ -35,6 +39,10 @@ router
     .get(getTourById)
     .patch(protect, restrictTo('admin', 'lead-guide'), updateTour)
     .delete(protect, restrictTo('admin', 'lead-guide'), deleteTour);
+
+router
+    .route('/tours-within/:distance/center/:latlng/unit/:unit')
+    .get(getToursWithin);
 
 router.use('/:tourId/reviews', reviewRouter);
 
