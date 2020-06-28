@@ -13,6 +13,7 @@ const {
 
 const {
     protect,
+    restrictTo,
     signUp,
     login,
     forgotPassword,
@@ -28,12 +29,17 @@ userRouter.post('/signup', signUp);
 userRouter.post('/login', login);
 userRouter.post('/forgotPassword', forgotPassword);
 userRouter.patch('/resetPassword/:token', resetPassword);
-userRouter.post('/updatePassword', protect, updatePassword);
-userRouter.patch('/updateMe', protect, updateMe);
-userRouter.delete('/deleteMe', protect, deleteMe);
-userRouter.get('/me', protect, getMe, getUser);
+
+userRouter.use(protect);
+
+userRouter.post('/updatePassword', updatePassword);
+userRouter.patch('/updateMe', updateMe);
+userRouter.delete('/deleteMe', deleteMe);
+userRouter.get('/me', getMe, getUser);
 
 //Routes defined for system administrator!
+userRouter.use(restrictTo('admin'));
+
 userRouter.route('/').get(allUsers).post(createUser);
 userRouter.route('/:id').get(getUser).patch(updateUser).delete(deleteUser);
 

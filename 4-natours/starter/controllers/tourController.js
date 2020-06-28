@@ -92,7 +92,6 @@ exports.createTour = factory.createOne(Tour);
     */
 //});
 
-
 //Using Handler Factory
 exports.updateTour = factory.updateOne(Tour);
 /*

@@ -6,6 +6,8 @@ const reviewRouter = express.Router({
     mergeParams: true,
 });
 
+reviewRouter.use(authController.protect);
+
 reviewRouter
     .route('/')
     .get(authController.protect, reviewController.getAllReviews)
@@ -19,7 +21,13 @@ reviewRouter
 reviewRouter
     .route('/:id')
     .get(reviewController.getReviewById)
-    .patch(reviewController.updateReview)
-    .delete(reviewController.deleteReview);
+    .patch(
+        authController.restrictTo('admin', 'user'),
+        reviewController.updateReview
+    )
+    .delete(
+        authController.restrictTo('admin', 'user'),
+        reviewController.deleteReview
+    );
 
 module.exports = reviewRouter;
