@@ -277,3 +277,49 @@ exports.getToursWithin = catchAsync(async (req, res, next) => {
         },
     });
 });
+
+exports.getDistances = catchAsync(async (req, res, next) => {
+    const {
+        latlng,
+        unit,
+    } = req.params;
+
+    const [lat, lng] = latlng.split(',');
+
+    //geoNear calculates distance in Metres. Hence, we calculate multiplier based on units passed in params.
+    const multiplier = unit === 'km' ? 0.001 : 0.000621371;
+
+    if (!lat || !lng) {
+        next(
+            new AppError(
+                'Latitude and Longitude must be defined in format: -lat,long',
+                400
+            )
+        );
+    }
+
+    const distances = await Tour.aggregate([{
+        $geoNear: {
+            near: {
+                type: 'Point',
+                coordinates: [lng * 1, lat * 1],
+            },
+            distanceField: 'distance',
+            distanceMultiplier: multiplier,
+        },
+    }, {
+        $project: {
+            distance: 1,
+            name: 1,
+        },
+    }, ]);
+
+    console.log(lat, lng, unit);
+    res.status(200).json({
+        status: 'success',
+        requestedAt: req.requestTime,
+        data: {
+            distances,
+        },
+    });
+});

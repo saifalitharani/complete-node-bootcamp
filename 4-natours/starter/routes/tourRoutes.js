@@ -12,6 +12,7 @@ const {
     getTourStats,
     getMonthlyPlan,
     getToursWithin,
+    getDistances,
 } = require('../controllers/tourController');
 
 const {
@@ -43,6 +44,9 @@ router
 router
     .route('/tours-within/:distance/center/:latlng/unit/:unit')
     .get(getToursWithin);
+
+//{{URL}}/api/v1/tours/distances/34.111745,-118.113491/unit/mi
+router.route('/distances/:latlng/unit/:unit').get(getDistances);
 
 router.use('/:tourId/reviews', reviewRouter);
 
