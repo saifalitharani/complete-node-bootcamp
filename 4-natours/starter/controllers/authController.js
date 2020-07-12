@@ -8,7 +8,6 @@ const User = require('../models/userModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 const sendEmail = require('../utils/email');
-const e = require('express');
 
 const signToken = (id) => {
     return jwt.sign({
