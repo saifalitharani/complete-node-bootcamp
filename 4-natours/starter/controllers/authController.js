@@ -127,6 +127,7 @@ exports.protect = catchAsync(async (req, res, next) => {
     //If JWT satisfies all the prior conditions, GRANT ACCESS to protected routes.
     //attaching the user object to the request object, which travels from middleware to middleware.
     req.user = currentUser;
+    res.locals.user = currentUser;
     next();
 });
 
