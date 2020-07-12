@@ -38,7 +38,8 @@ const createSendToken = (user, statusCode, res) => {
     //Remove password from output
     user.password = undefined;
 
-    res.status(statusCode).json({
+    console.log(res.cookies);
+    return res.status(statusCode).json({
         status: 'success',
         token,
         data: user,
@@ -262,7 +263,6 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
 
 //Only for rendered pages, and there will be no errors.
 exports.isLoggedIn = async (req, res, next) => {
-
     //Step#1: Getting token and verifying if its present in request.
     if (req.cookies.jwt) {
         try {
@@ -298,7 +298,7 @@ exports.logout = catchAsync(async (req, res, next) => {
         httpOnly: true,
     });
 
-    res.status(200).json({
+    return res.status(200).json({
         status: 'success',
     });
 });
