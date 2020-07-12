@@ -8,6 +8,7 @@ const User = require('../models/userModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 const sendEmail = require('../utils/email');
+const e = require('express');
 
 const signToken = (id) => {
     return jwt.sign({
@@ -261,28 +262,44 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
 });
 
 //Only for rendered pages, and there will be no errors.
-exports.isLoggedIn = catchAsync(async (req, res, next) => {
+exports.isLoggedIn = async (req, res, next) => {
+
     //Step#1: Getting token and verifying if its present in request.
     if (req.cookies.jwt) {
-        const decoded = await promisify(jwt.verify)(
-            req.cookies.jwt,
-            process.env.JWT_SECRET
-        );
+        try {
+            const decoded = await promisify(jwt.verify)(
+                req.cookies.jwt,
+                process.env.JWT_SECRET
+            );
 
-        //Step#2: Check if user still exists
-        const currentUser = await User.findById(decoded.id);
-        if (!currentUser) {
+            //Step#2: Check if user still exists
+            const currentUser = await User.findById(decoded.id);
+            if (!currentUser) {
+                return next();
+            }
+
+            //Step#4: Check if user has changed password after this token was issued.
+            if (await currentUser.changedPasswordAfter(decoded.iat)) {
+                return next();
+            }
+
+            // There's a logged in user.
+            res.locals.user = currentUser;
+            return next();
+        } catch (err) {
             return next();
         }
-
-        //Step#4: Check if user has changed password after this token was issued.
-        if (await currentUser.changedPasswordAfter(decoded.iat)) {
-            return next();
-        }
-
-        // There's a logged in user.
-        res.locals.user = currentUser;
-        return next();
     }
     next();
+};
+
+exports.logout = catchAsync(async (req, res, next) => {
+    res.cookie('jwt', 'logged-out', {
+        expires: new Date(Date.now() + 10 * 1000),
+        httpOnly: true,
+    });
+
+    res.status(200).json({
+        status: 'success',
+    });
 });

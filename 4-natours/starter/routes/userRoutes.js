@@ -16,6 +16,7 @@ const {
     restrictTo,
     signUp,
     login,
+    logout,
     forgotPassword,
     resetPassword,
     updatePassword,
@@ -27,6 +28,7 @@ const userRouter = express.Router();
 //Routes defined for normal users.
 userRouter.post('/signup', signUp);
 userRouter.post('/login', login);
+userRouter.get('/logout', logout);
 userRouter.post('/forgotPassword', forgotPassword);
 userRouter.patch('/resetPassword/:token', resetPassword);
 
