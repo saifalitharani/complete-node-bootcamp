@@ -59,5 +59,9 @@ if (userPasswordUpdateForm) {
             passwordConfirm
         }, 'password');
         document.querySelector('.btn--save-password').textContent = 'Save Password';
+
+        document.getElementById('password-current').textContent = '';
+        document.getElementById('password').textContent = '';
+        document.getElementById('password-confirm').textContent = '';
     });
 }

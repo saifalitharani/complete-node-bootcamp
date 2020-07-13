@@ -8908,8 +8908,11 @@ if (userPasswordUpdateForm) {
 
             case 7:
               document.querySelector('.btn--save-password').textContent = 'Save Password';
+              document.getElementById('password-current').textContent = '';
+              document.getElementById('password').textContent = '';
+              document.getElementById('password-confirm').textContent = '';
 
-            case 8:
+            case 11:
             case "end":
               return _context.stop();
           }
