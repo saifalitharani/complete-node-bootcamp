@@ -69,6 +69,14 @@ app.use(
     })
 );
 
+// Middleware to parse the form data.
+app.use(
+    express.urlencoded({
+        extended: true,
+        limit: '10kb',
+    })
+);
+
 app.use(cookieParser());
 
 //Adding custom middleware - add request time to response.
