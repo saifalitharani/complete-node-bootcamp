@@ -1,27 +1,62 @@
 const nodemailer = require('nodemailer');
+const pug = require('pug');
+const htmlToText = require('html-to-text');
 
-const sendEmail = async (options) => {
-    // 1) Create a transporter
-    const transporter = nodemailer.createTransport({
-        host: process.env.EMAIL_HOST,
-        port: process.env.EMAIL_PORT,
-        auth: {
-            user: process.env.EMAIL_USERNAME,
-            pass: process.env.EMAIL_PASSWORD,
+module.exports = class Email {
+    constructor(user, url) {
+        this.to = user.email;
+        this.firstName = user.name.split(' ')[0];
+        this.url = url;
+        this.from = `Saif Ali <${process.env.EMAIL_FROM}>`;
+    }
+
+    newTransport() {
+        if (process.env.NODE_ENV === 'production') {
+            //use send-grid to send email
+            return 1;
         }
-    });
 
-    // 2) Define the email options
-    const mailOptions = {
-        from: 'Jonas Schmedtmann <hello@jonas.io>',
-        to: options.email,
-        subject: options.subject,
-        text: options.message,
-        // html:
-    };
+        return nodemailer.createTransport({
+            host: 'smtp.mailtrap.io',
+            port: '2525',
+            auth: {
+                user: '4a432888b74f14',
+                pass: 'aedbb70b6bed65',
+            },
+        });
+    }
 
-    // 3) Actually send the email
-    await transporter.sendMail(mailOptions);
+    async send(template, subject) {
+        // 1) Render html based on pug template
+        const html = pug.renderFile(
+            `${__dirname}/../views/emails/${template}.pug`, {
+                firstName: this.firstName,
+                url: this.url,
+                subject,
+            }
+        );
+
+        // 2) Define the email options
+        const mailOptions = {
+            from: this.from,
+            to: this.to,
+            subject,
+            html,
+            text: htmlToText.fromString(html),
+        };
+
+        // 3) Create a transport and send email
+        await this.newTransport().sendMail(mailOptions);
+    }
+
+    async sendWelcome() {
+        await this.send('welcome', 'Welcome to Natours Family!');
+    }
+
+    async sendResetPassword() {
+        await this.send(
+            'passwordReset',
+            'Your Password Reset Token (Validity: 10 mins)'
+        );
+    }
 };
-
-module.exports = sendEmail;
