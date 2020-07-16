@@ -10,11 +10,15 @@ import {
 import {
     updateUserSettings
 } from './updateSettings';
+import {
+    bookTour
+} from './stripe';
 
 // DOM ELEMENTS
 const mapBox = document.getElementById('map');
 const loginForm = document.querySelector('.form--login');
 const logOutBtn = document.querySelector('.nav__el--logout');
+const bookBtn = document.getElementById('book-tour');
 const userDataUpdateForm = document.querySelector('.form-user-data');
 const userPasswordUpdateForm = document.querySelector('.form-user-password');
 
@@ -62,5 +66,16 @@ if (userPasswordUpdateForm) {
         document.getElementById('password-current').textContent = '';
         document.getElementById('password').textContent = '';
         document.getElementById('password-confirm').textContent = '';
+    });
+}
+
+if (bookBtn) {
+    bookBtn.addEventListener('click', e => {
+        e.target.textContent = 'Processing...';
+        const {
+            tourId
+        } = e.target.dataset;
+        console.log(tourId);
+        bookTour(tourId);
     });
 }
