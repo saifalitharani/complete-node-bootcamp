@@ -1,7 +1,5 @@
 const crypto = require('crypto');
-const {
-    promisify
-} = require('util');
+const { promisify } = require('util');
 const jwt = require('jsonwebtoken');
 
 const User = require('../models/userModel');
@@ -10,16 +8,18 @@ const AppError = require('../utils/appError');
 const Email = require('../utils/email');
 
 const signToken = (id) => {
-    return jwt.sign({
+    return jwt.sign(
+        {
             id,
         },
-        process.env.JWT_SECRET, {
+        process.env.JWT_SECRET,
+        {
             expiresIn: 90 * 24 * 60 * 60,
         }
     );
 };
 
-const createSendToken = (user, statusCode, res) => {
+const createSendToken = (user, statusCode, req, res) => {
     const token = signToken(user._id);
 
     //Adding Expiry and HttpOnly options in Cookie.
@@ -28,10 +28,9 @@ const createSendToken = (user, statusCode, res) => {
             Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
         ),
         httpOnly: true,
+        //Adding secure method for production environment only (use by HTTPS only)
+        secure: req.secure || req.headers['x-forwared-proto'],
     };
-
-    //Adding secure method for production environment only (use by HTTPS only)
-    if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
 
     res.cookie('jwt', token, cookieOptions);
 
@@ -58,14 +57,11 @@ exports.signUp = catchAsync(async (req, res, next) => {
     const url = `${req.protocol}://${req.get('host')}/me`;
     console.log('url:', url);
     await new Email(newUser, url).sendWelcome();
-    createSendToken(newUser, 201, res);
+    createSendToken(newUser, 201, req, res);
 });
 
 exports.login = catchAsync(async (req, res, next) => {
-    const {
-        email,
-        password
-    } = req.body;
+    const { email, password } = req.body;
     //1) Check if email and password exists
     if (!email || !password) {
         return next(
@@ -81,7 +77,7 @@ exports.login = catchAsync(async (req, res, next) => {
         return next(new AppError('Incorrect username or password', 401));
     }
 
-    createSendToken(user, 200, res);
+    createSendToken(user, 200, req, res);
 });
 
 exports.protect = catchAsync(async (req, res, next) => {
@@ -226,7 +222,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
     //3: Update changePasswordAt property for the user - pre function defined
 
     //4: Log the user in and send the JWT
-    createSendToken(user, 200, res);
+    createSendToken(user, 200, req, res);
 });
 
 exports.updatePassword = catchAsync(async (req, res, next) => {
@@ -254,7 +250,7 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
     await user.save();
 
     //4: Login the user and send JWT.
-    createSendToken(user, 200, res);
+    createSendToken(user, 200, req, res);
 });
 
 //Only for rendered pages, and there will be no errors.

@@ -19,6 +19,7 @@ const globalErrorHandler = require('./controllers/errorController');
 const AppError = require('./utils/appError');
 
 const app = express();
+app.enable('trust proxy');
 
 //GLOBAL MIDDLEWARES.
 app.set('view engine', 'pug');
