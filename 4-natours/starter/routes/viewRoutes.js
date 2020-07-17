@@ -7,8 +7,8 @@ const viewRouter = express.Router();
 
 viewRouter.get(
     '/',
-    authController.isLoggedIn,
     bookingController.createBookingCheckout,
+    authController.isLoggedIn,
     viewsController.getOverview
 );
 viewRouter.get(
@@ -27,5 +27,7 @@ viewRouter.post(
     authController.protect,
     viewsController.updateData
 );
+
+viewRouter.get('/my-tours', authController.protect, viewsController.getMyTours);
 
 module.exports = viewRouter;
