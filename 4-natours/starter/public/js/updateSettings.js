@@ -1,14 +1,15 @@
 /* eslint-disable */
 import axios from 'axios';
-import {
-    showAlert
-} from './alerts';
+import { showAlert } from './alerts';
 
 // Type can be 'Password' or 'Data'
 export const updateUserSettings = async (data, type) => {
     try {
-        const url = (type === 'data') ? 'http://127.0.0.1:8000/api/v1/users/updateMe/' : 'http://127.0.0.1:8000/api/v1/users/updatePassword/'
-        const method = (type === 'data') ? 'PATCH' : 'POST'
+        const url =
+            type === 'data'
+                ? '/api/v1/users/updateMe/'
+                : '/api/v1/users/updatePassword/';
+        const method = type === 'data' ? 'PATCH' : 'POST';
         const res = await axios({
             method,
             url,
@@ -18,6 +19,6 @@ export const updateUserSettings = async (data, type) => {
             showAlert('success', `${type.toUpperCase()} updated successfully!`);
         }
     } catch (err) {
-        showAlert('error', err.response.data.message)
+        showAlert('error', err.response.data.message);
     }
 };
